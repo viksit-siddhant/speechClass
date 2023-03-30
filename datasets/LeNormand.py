@@ -1,7 +1,6 @@
 import numpy as np
-import torchaudio
+from speechClass.utils import analyse_file
 import torch
-from utils import analyse_file
 import os
 
 class LeNormandData(torch.utils.data.Dataset):

@@ -1,4 +1,4 @@
-from utils import analyse_file
+from speechClass.utils import analyse_file
 import numpy as np
 import torch
 import torchaudio
