@@ -18,7 +18,7 @@ class czechData(torch.utils.data.Dataset):
         for root,dirs,files in os.walk(os.path.join(path,'Healthy')):
             for file in files:
                 if file.endswith('.wav'):
-                    x,y,powers = analyse_file(os.path.join(root,file),0,1,target_sr=self.sr,maxlen=self.maxlen,n_mfcc=self.n_mels)
+                    x,y,powers = analyse_file(os.path.join(root,file),0,1,target_sr=self.sr,maxlen=self.maxlen,n_fft=self.n_mels)
                     self.x.append(x)
                     self.num_pos += x.shape[0]
                     self.y.append(y)
@@ -26,7 +26,7 @@ class czechData(torch.utils.data.Dataset):
         for root,dirs,files in os.walk(os.path.join(path,'Patients')):
             for file in files:
                 if file.endswith('.wav'):
-                    x,y,powers = analyse_file(os.path.join(root,file),1,1,target_sr=self.sr,maxlen=self.maxlen,n_mfcc=self.n_mels)
+                    x,y,powers = analyse_file(os.path.join(root,file),1,1,target_sr=self.sr,maxlen=self.maxlen,n_fft=self.n_mels)
                     self.x.append(x)
                     self.y.append(y)
 
