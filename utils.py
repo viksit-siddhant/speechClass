@@ -40,7 +40,7 @@ def analyse_file(audio_path,
     xes = []
     yes = []
     powers = []
-    mfcc = torchaudio.transforms.Spectrogram(n_fft=512)(audio).numpy()
+    mfcc = torchaudio.transforms.Spectrogram(n_fft=n_fft)(audio).numpy()
     num_samples = int(np.ceil(mfcc.shape[-1]/maxlen))
     for i in range(num_samples):
         sample = np.zeros((1,n_fft//2+1,maxlen))

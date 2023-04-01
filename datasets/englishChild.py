@@ -17,7 +17,7 @@ class EnglishData(torch.utils.data.Dataset):
         for root,dirs,files in os.walk(path):
             for file in files:
                 if file.endswith('.wav'):
-                    x,y,powers = analyse_file(os.path.join(root,file),0,1,self.sr,self.maxlen,self.n_mfcc)
+                    x,y,powers = analyse_file(os.path.join(root,file),0,1,self.sr,self.maxlen,n_fft=self.n_mfcc)
                     self.x.append(x)
                     self.y.append(y)
         self.x = np.concatenate(self.x)

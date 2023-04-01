@@ -1,7 +1,6 @@
 from speechClass.utils import analyse_file
 import numpy as np
 import torch
-import torchaudio
 import os
 
 class czechData(torch.utils.data.Dataset):
@@ -38,4 +37,3 @@ class czechData(torch.utils.data.Dataset):
     
     def __getitem__(self,idx):
         return self.x[idx],self.y[idx]
-    
