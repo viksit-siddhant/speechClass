@@ -6,8 +6,8 @@ def analyse_file(audio_path,
                  target_class,
                  len_labels,
                  target_sr=32000,
-                 maxlen  = 32, 
-                 n_mfcc = 32,
+                 maxlen  = None, 
+                 n_fft = 512,
                  threshold = 0,
                  timestamp_path = None,
                  ):
@@ -17,9 +17,11 @@ def analyse_file(audio_path,
     yes is a numpy array of shape (num_samples,len_labels)
     powers is a numpy array of shape (num_samples,)
     '''
+    if maxlen is None:
+        maxlen = n_fft//2 + 1
     audio,sr  = torchaudio.load(audio_path)
     if audio is None or audio.shape[-1] < 256:
-        return np.zeros((0,1,n_mfcc,maxlen)),np.zeros((0,len_labels)),np.zeros((0,))
+        return np.zeros((0,1,n_fft//2+1,maxlen)),np.zeros((0,len_labels)),np.zeros((0,))
     audio = torchaudio.transforms.Resample(sr,target_sr)(audio)
     
     if audio.shape[0] > 1:
@@ -38,10 +40,10 @@ def analyse_file(audio_path,
     xes = []
     yes = []
     powers = []
-    mfcc = torchaudio.transforms.MFCC(sample_rate=target_sr,n_mfcc=n_mfcc)(audio).numpy()
+    mfcc = torchaudio.transforms.Spectrogram(n_fft=512)(audio).numpy()
     num_samples = int(np.ceil(mfcc.shape[-1]/maxlen))
     for i in range(num_samples):
-        sample = np.zeros((1,n_mfcc,maxlen))
+        sample = np.zeros((1,n_fft//2+1,maxlen))
         img = mfcc[:,:,i*maxlen : (i+1)*maxlen]
         sample[:,:,:img.shape[-1]] = img
         powers.append(np.sum(np.square(sample)))
@@ -50,7 +52,7 @@ def analyse_file(audio_path,
 
     xes = np.concatenate(xes)
     if xes.shape[0] == 0:
-        xes = np.zeros((0,1,n_mfcc,maxlen))
+        xes = np.zeros((0,1,n_fft//2+1,maxlen))
         yes = np.zeros((0,len_labels))
         powers = np.zeros((0,))
         return xes,yes,powers

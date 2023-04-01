@@ -4,16 +4,16 @@ import torch
 import os
 
 class LeNormandData(torch.utils.data.Dataset):
-    def __init__(self,sr, n_mf,maxlen,classes=[0,1]):
+    def __init__(self,sr, n_mf,maxlen,classes=[0,1],path='data/LeNormand/'):
         self.x = []
         self.y = []
         self.sr = sr
         self.n_mfcc = n_mf
         self.maxlen = maxlen
-        self.load_data(classes)
+        self.load_data(classes,path)
     
-    def load_data(self,classes):
-        for root, dirs, files in os.walk('data/LeNormand/SLI/'):
+    def load_data(self,classes,path):
+        for root, dirs, files in os.walk(os.path.join(path,'SLI/')):
             for file in files:
                 if file.endswith(".wav") and 1 in classes:
                     x,y,powers = analyse_file(os.path.join(root,file),1,1,self.sr,self.maxlen,self.n_mfcc,
@@ -21,7 +21,7 @@ class LeNormandData(torch.utils.data.Dataset):
                     self.x.append(x)
                     self.y.append(y)
         
-        for root, dirs, files in os.walk('data/LeNormand/TD/'):
+        for root, dirs, files in os.walk(os.path.join(path,'TD/')):
             for file in files:
                 if file.endswith(".wav") and 0 in classes:
                     x,y,powers = analyse_file(os.path.join(root,file),0,1,self.sr,self.maxlen,self.n_mfcc)

@@ -5,16 +5,16 @@ from speechClass.utils import analyse_file
 import os
 
 class EnglishData(torch.utils.data.Dataset):
-    def __init__(self,sr, n_mf,maxlen):
+    def __init__(self,sr, n_mf,maxlen,path='data/english_children'):
         self.x = []
         self.y = []
         self.sr = sr
         self.n_mfcc = n_mf
         self.maxlen = maxlen
-        self.load_data()
+        self.load_data(path)
 
-    def load_data(self):
-        for root,dirs,files in os.walk('data/english_children'):
+    def load_data(self,path):
+        for root,dirs,files in os.walk(path):
             for file in files:
                 if file.endswith('.wav'):
                     x,y,powers = analyse_file(os.path.join(root,file),0,1,self.sr,self.maxlen,self.n_mfcc)
