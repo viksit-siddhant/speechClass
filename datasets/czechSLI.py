@@ -12,8 +12,18 @@ class czechData(torch.utils.data.Dataset):
         self.y = []
         self.num_pos = 0
         self.load_data(path)
+
+    def get_total_files(self,path):
+        total = 0
+        for _,_,files in os.walk(path):
+            for file in files:
+                if file.endswith('.wav'):
+                    total += 1
+        return total
     
     def load_data(self,path):
+        total = self.get_total_files(path)
+        num_processed = 0
         for root,dirs,files in os.walk(os.path.join(path,'Healthy')):
             for file in files:
                 if file.endswith('.wav'):
@@ -21,6 +31,8 @@ class czechData(torch.utils.data.Dataset):
                     self.x.append(x)
                     self.num_pos += x.shape[0]
                     self.y.append(y)
+                    num_processed += 1
+                    print('Processed {}/{} files'.format(num_processed,total),end='\r')
         
         for root,dirs,files in os.walk(os.path.join(path,'Patients')):
             for file in files:
@@ -28,6 +40,8 @@ class czechData(torch.utils.data.Dataset):
                     x,y,powers = analyse_file(os.path.join(root,file),1,1,target_sr=self.sr,maxlen=self.maxlen,n_fft=self.n_mels)
                     self.x.append(x)
                     self.y.append(y)
+                    num_processed += 1
+                    print('Processed {}/{} files'.format(num_processed,total),end='\r')
 
         self.x = np.concatenate(self.x)
         self.y = np.concatenate(self.y)
