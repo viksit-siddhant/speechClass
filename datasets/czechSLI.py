@@ -3,7 +3,7 @@ import numpy as np
 import torch
 import os
 
-class czechData(torch.utils.data.Dataset):
+class CzechData(torch.utils.data.Dataset):
     def __init__(self,sr,n_mels,maxlen,path='data/czechSLI/'):
         self.sr = sr
         self.n_mels = n_mels

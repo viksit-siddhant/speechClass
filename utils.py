@@ -1,6 +1,7 @@
 import numpy as np
 import torchaudio
 import torch
+import os
 
 def analyse_file(audio_path,
                  target_class,
@@ -78,3 +79,32 @@ def get_timestamps(path, token = "*CHI"):
             except:
                 pass
     return timestamps
+
+def serialize_data(path):
+    from speechClass.datasets.englishChild import EnglishData
+    from speechClass.datasets.czechSLI import CzechData
+    from speechClass.datasets.LeNormand import LeNormandData
+
+    english_data = EnglishData(32000,512,None,path='speechClass/data/english_children')
+    czech_data = CzechData(32000,512,None,path='speechClass/data/czechSLI')
+    lenormand_data = LeNormandData(32000,512,None,path='speechClass/data/LeNormand')
+    f = open(path, 'wb')
+    np.savez(f,
+             english_x = english_data.x,
+             english_y = english_data.y,
+             czech_x = czech_data.x,
+             czech_y = czech_data.y,
+             lenormand_x = lenormand_data.x,
+             lenormand_y = lenormand_data.y,)
+
+
+class Dataset(torch.utils.data.Dataset):
+    def __init__(self,x,y):
+        self.x = x
+        self.y = y
+
+    def __len__(self):
+        return len(self.x)
+
+    def __getitem__(self, idx):
+        return self.x[idx], self.y[idx]
