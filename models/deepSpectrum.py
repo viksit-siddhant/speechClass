@@ -1,5 +1,7 @@
 import torch
 from torchvision.models import alexnet
+from torchvision.transforms.functional import to_tensor, resize
+
 from sklearn.svm import LinearSVC
 
 class Model:
@@ -23,6 +25,9 @@ class Model:
 
     def get_data(self,loader):
         for x,y in loader:
+            x = resize(x,(224,224))
+            if (x.shape[1] == 1):
+                x = x.repeat(1,3,1,1)
             if torch.cuda.is_available():
                 x = x.cuda()
             self.model(x)

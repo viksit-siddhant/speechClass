@@ -41,7 +41,9 @@ def analyse_file(audio_path,
     xes = []
     yes = []
     powers = []
+
     mfcc = torchaudio.transforms.Spectrogram(n_fft=n_fft)(audio).numpy()
+    
     num_samples = int(np.ceil(mfcc.shape[-1]/maxlen))
     for i in range(num_samples):
         sample = np.zeros((1,n_fft//2+1,maxlen))
@@ -85,9 +87,9 @@ def serialize_data(path):
     from speechClass.datasets.czechSLI import CzechData
     from speechClass.datasets.LeNormand import LeNormandData
 
-    english_data = EnglishData(32000,512,None,path='speechClass/data/english_children')
-    czech_data = CzechData(32000,512,None,path='speechClass/data/czechSLI')
-    lenormand_data = LeNormandData(32000,512,None,path='speechClass/data/LeNormand')
+    english_data = EnglishData(16000,256,None,path='speechClass/data/english_children')
+    czech_data = CzechData(16000,256,None,path='speechClass/data/czechSLI')
+    lenormand_data = LeNormandData(16000,256,None,path='speechClass/data/LeNormand')
     f = open(path, 'wb')
     np.savez(f,
              english_x = english_data.x,
