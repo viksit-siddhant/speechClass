@@ -10,7 +10,7 @@ class Model:
         if torch.cuda.is_available():
             self.model = self.model.cuda()
         self.features = []
-        [l for l in self.model.children()][-2].register_forward_hook(self.get_features('fc7'))
+        self.model.classifier[-2].register_forward_hook(self.get_features('fc7'))
 
         for layer in self.model.children():
             for param in layer.parameters():
