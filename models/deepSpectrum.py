@@ -24,6 +24,8 @@ class Model:
         return hook
 
     def get_data(self,loader):
+        num_samples = len(loader)
+        num_batches_processed = 0
         for x,y in loader:
             x = resize(x,(224,224))
             if (x.shape[1] == 1):
@@ -31,6 +33,8 @@ class Model:
             if torch.cuda.is_available():
                 x = x.cuda()
             self.model(x)
+            num_batches_processed += 1
+            print(f'Processed {num_batches_processed}/{num_samples} batches', end='\r')
         features = torch.cat(self.features).cpu().numpy()
         self.features = []
         return features
