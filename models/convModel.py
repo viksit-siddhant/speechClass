@@ -13,8 +13,8 @@ class ConvModel(nn.Module):
 
         self.conv4 = nn.Conv2d(64, 64, kernel_size = (3,3), stride = 2, padding = (1,1))
 
-        num_dense = 64*8*8
-        self.fc = nn.Linear(num_dense, 2)
+        num_dense = 69696
+        self.fc1 = nn.Linear(num_dense, 1)
 
     def forward(self,x):
 
@@ -27,8 +27,8 @@ class ConvModel(nn.Module):
         x = self.conv4(x)
         x = nn.ReLU()(x)
         x = torch.flatten(x,1)
-        x = self.fc(x)
-        x = nn.LogSoftmax(dim=1)(x)
+        x = self.fc1(x)
+        x = nn.Sigmoid()(x)
         return x
 
     def enumerate_parameters(self):
